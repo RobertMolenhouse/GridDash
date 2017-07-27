@@ -42,75 +42,45 @@ public class MainDashPanel extends JPanel{
 		control = new CommandControl(data);		
 		
 
-		//main panel that all the others will be placed into
-		JPanel controlPanel = new JPanel();
-		controlPanel.setLayout(new GridLayout(7,2));
-
-		tach = new JLabel(data.getRpm() + "");
-		speedo = new JLabel(data.getMph() + "");
-		coolTmp = new JLabel(data.getCoolandTemp() + "");
-		oilTmp = new JLabel(data.getOilTemp() + "");
-		fuelLvl = new JLabel(data.getFuelLevel() + "");
-		throttlePos = new JLabel(data.getThrottlePos() + "");
-		gear = new JLabel(data.getGear());
-		gear.setBackground(Color.BLACK);
 		
-		controlPanel.add(new JLabel("RPM"));
-		controlPanel.add(tach);
-		controlPanel.add(new JLabel("MPH"));
-		controlPanel.add(speedo);
-		controlPanel.add(new JLabel("ct"));
-		controlPanel.add(coolTmp);
-		controlPanel.add(new JLabel("ot"));
-		controlPanel.add(oilTmp);
-		controlPanel.add(new JLabel("fuel"));
-		controlPanel.add(fuelLvl);
-		controlPanel.add(new JLabel("throttle"));
-		controlPanel.add(throttlePos);
-		controlPanel.add(new JLabel("gear"));
-		controlPanel.add(gear);
-		
-		controlPanel.setBackground(Color.CYAN);
-		controlPanel.setPreferredSize(new Dimension(790,400));
-		controlPanel.revalidate();
-		add(controlPanel);
+		add(createLabelPanel());
 		
 		start();
 		
 	}
 	
 	private JPanel createLabelPanel(){
-		controlPanel = new JPanel();
-		controlPanel.setLayout(new GridLayout(7,2));
-		
-		tach = new JLabel(data.getRpm() + "");
-		speedo = new JLabel(data.getMph() + "");
-		coolTmp = new JLabel(data.getCoolandTemp() + "");
-		oilTmp = new JLabel(data.getOilTemp() + "");
-		fuelLvl = new JLabel(data.getFuelLevel() + "");
-		throttlePos = new JLabel(data.getThrottlePos() + "");
-		gear = new JLabel(data.getGear());
-		gear.setBackground(Color.BLACK);
-		
-		controlPanel.add(new JLabel("RPM"));
-		controlPanel.add(tach);
-		controlPanel.add(new JLabel("MPH"));
-		controlPanel.add(speedo);
-		controlPanel.add(new JLabel("ct"));
-		controlPanel.add(coolTmp);
-		controlPanel.add(new JLabel("ot"));
-		controlPanel.add(oilTmp);
-		controlPanel.add(new JLabel("fuel"));
-		controlPanel.add(fuelLvl);
-		controlPanel.add(new JLabel("throttle"));
-		controlPanel.add(throttlePos);
-		controlPanel.add(new JLabel("gear"));
-		controlPanel.add(gear);
-		
-		controlPanel.setBackground(Color.CYAN);
-		
-		controlPanel.setPreferredSize(new Dimension(1,1));
-		controlPanel.revalidate();
+		//main panel that all the others will be placed into
+				controlPanel = new JPanel();
+				controlPanel.setLayout(new GridLayout(8,2));
+
+				tach = new JLabel(data.getRpm() + "");
+				speedo = new JLabel(data.getMph() + "");
+				coolTmp = new JLabel(data.getCoolandTemp() + "");
+				oilTmp = new JLabel(data.getOilTemp() + "");
+				fuelLvl = new JLabel(data.getFuelLevel() + "");
+				throttlePos = new JLabel(data.getThrottlePos() + "");
+				gear = new JLabel(data.getGear());
+				gear.setBackground(Color.BLACK);
+				
+				controlPanel.add(new JLabel("RPM"));
+				controlPanel.add(tach);
+				controlPanel.add(new JLabel("MPH"));
+				controlPanel.add(speedo);
+				controlPanel.add(new JLabel("ct"));
+				controlPanel.add(coolTmp);
+				controlPanel.add(new JLabel("ot"));
+				controlPanel.add(oilTmp);
+				controlPanel.add(new JLabel("fuel"));
+				controlPanel.add(fuelLvl);
+				controlPanel.add(new JLabel("throttle"));
+				controlPanel.add(throttlePos);
+				controlPanel.add(new JLabel("gear"));
+				controlPanel.add(gear);
+				
+				controlPanel.setBackground(Color.CYAN);
+				controlPanel.setPreferredSize(new Dimension(790,400));
+				controlPanel.revalidate();
 		
 		return controlPanel;
 		
@@ -128,10 +98,13 @@ private void start(){
 		public void actionPerformed(ActionEvent event)
 		{
 			//update labelPanel
-			controlPanel.removeAll();
-			createLabelPanel();
-			controlPanel.revalidate();
-			controlPanel.repaint();
+			tach.setText(data.getRpm() + "");
+			speedo.setText(data.getMph() + "");
+			coolTmp.setText(data.getCoolandTemp() + "");
+			oilTmp.setText(data.getOilTemp() + "");
+			fuelLvl.setText(data.getFuelLevel() + "");
+			throttlePos.setText(data.getThrottlePos() + "");
+			gear.setText(data.getGear());
 		}
 	};
 	Timer timer = new Timer(10, action);
