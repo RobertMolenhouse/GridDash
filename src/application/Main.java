@@ -7,7 +7,7 @@ import javax.swing.JFrame;
 public class Main {
 
 	public static void main(String[] args) throws IOException, InterruptedException {
-		JFrame frame = new JFrame();
+		JFrame frame = new JFrame("Grid Dash");
 		try {
 			frame.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
 		} catch (Exception e) {
@@ -15,7 +15,7 @@ public class Main {
 			e.printStackTrace();
 		}
 		MainDashPanel panel = new MainDashPanel();
-		frame.getContentPane().add(panel); //TODO
+		frame.getContentPane().add(panel);
 		frame.setSize(800, 400);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
