@@ -19,6 +19,10 @@ import javax.swing.Timer;
  */
 public class MainDashPanel extends JPanel{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JLabel tach; //tachometer, rpm for dummies
 	private JLabel speedo; //speedometer, mph for dummies.
 	private JLabel coolTmp;
@@ -45,6 +49,7 @@ public class MainDashPanel extends JPanel{
 		add(controlPanel);
 		
 		start();
+		
 	}
 	
 	private JPanel createLabelPanel(){
@@ -83,12 +88,8 @@ public class MainDashPanel extends JPanel{
 	//run the CommandControl in its own thread.
 
 private void start(){
-	try {
-		control.run();
-	} catch (InterruptedException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
+	Thread controlThread = new Thread(control);
+	controlThread.start();
 	//new action listener for the timer
 	ActionListener action = new ActionListener()
 	{   
@@ -105,4 +106,6 @@ private void start(){
 	Timer timer = new Timer(10, action);
 	timer.start();
 }
+
+	
 }

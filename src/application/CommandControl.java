@@ -39,7 +39,7 @@ import java.util.Enumeration;
  * @author Bob Molenhouse
  *
  */
-public class CommandControl implements SerialPortEventListener{
+public class CommandControl implements SerialPortEventListener,Runnable{
 
 	SerialPort serialPort;
 
@@ -84,9 +84,8 @@ public class CommandControl implements SerialPortEventListener{
      * object.
      * 
      * TODO decide if i want every command in their own try catch, or to group together. 
-     * @throws InterruptedException 
      */
-    public void run() throws InterruptedException {
+    public void run() {
         //set up the ELM 327 to be ready to accept the commands how we want
         try {
             new EchoOffCommand().run(in, out);
