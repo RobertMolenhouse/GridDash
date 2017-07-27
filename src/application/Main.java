@@ -1,5 +1,6 @@
 package application;
 
+import java.awt.Dimension;
 import java.io.IOException;
 
 import javax.swing.JFrame;
@@ -16,7 +17,8 @@ public class Main {
 		}
 		MainDashPanel panel = new MainDashPanel();
 		frame.getContentPane().add(panel);
-		frame.setSize(800, 400);
+		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		frame.setUndecorated(true);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 		frame.setResizable(false);
