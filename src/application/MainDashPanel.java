@@ -1,33 +1,23 @@
 package application;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
-import javafx.animation.*;
-import javafx.util.Duration;
-import java.net.URL;
-import java.util.ResourceBundle;
 
+import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
-
-
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 
 /*
  * switching to swing.  Things to remember to put in. gauges, exit button, annunciator lights, depending on how far
  * i get, need to be able to switch between different dashes.  Annunciator lights programmable.
  */
-public class MainDashPanel extends JPanel implements Initializable {
+public class MainDashPanel extends JPanel{
 	
 	private JLabel tach; //tachometer, rpm for dummies
 	private JLabel speedo; //speedometer, mph for dummies.
@@ -36,6 +26,8 @@ public class MainDashPanel extends JPanel implements Initializable {
 	private JLabel fuelLvl;
 	private JLabel throttlePos;
 	private JLabel gear;
+	
+	private JPanel labelPanel;
 
 	private CommandControl control;
 	private CarData data;
@@ -43,24 +35,29 @@ public class MainDashPanel extends JPanel implements Initializable {
 	public MainDashPanel() throws IOException, InterruptedException {
 		data = new CarData();
 		control = new CommandControl(data);		
+		
+		setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
 		//main panel that all the others will be placed into
 		JPanel controlPanel = new JPanel();
 		controlPanel.setLayout(new BorderLayout());
-
-		controlPanel.add(createLabelPanel(), BorderLayout.CENTER);
+		controlPanel.add(createLabelPanel(), BorderLayout.NORTH);
+		
+		add(controlPanel);
+		
+		start();
 	}
 	
 	private JPanel createLabelPanel(){
-		JPanel labelPanel = new JPanel();
+		labelPanel = new JPanel();
 		labelPanel.setLayout(new GridLayout());
 		
-		tach = new JLabel();
-		speedo = new JLabel();
-		coolTmp = new JLabel();
-		oilTmp = new JLabel();
-		fuelLvl = new JLabel();
-		throttlePos = new JLabel();
-		gear = new JLabel();
+		tach = new JLabel(data.getRpm() + "");
+		speedo = new JLabel(data.getMph() + "");
+		coolTmp = new JLabel(data.getCoolandTemp() + "");
+		oilTmp = new JLabel(data.getOilTemp() + "");
+		fuelLvl = new JLabel(data.getFuelLevel() + "");
+		throttlePos = new JLabel(data.getThrottlePos() + "");
+		gear = new JLabel(data.getGear());
 		
 		labelPanel.add(new JLabel("RPM"));
 		labelPanel.add(tach);
@@ -77,104 +74,35 @@ public class MainDashPanel extends JPanel implements Initializable {
 		labelPanel.add(new JLabel("gear"));
 		labelPanel.add(gear);
 		
+		labelPanel.setBackground(Color.CYAN);
+		
 		return labelPanel;
 		
 	}
 
 	//run the CommandControl in its own thread.
-	private Service<Void> obdControl;
 
-	@Override
-	public void initialize(URL url, ResourceBundle rb) {
-		
-		bindToTime();
-
-		obdControl = new Service<Void>() {
-
-			@Override
-			protected Task<Void> createTask() {
-				return new Task<Void>() {
-
-					@Override
-					protected Void call() throws Exception {
-						try {
-							control = new CommandControl(data);
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						try {
-							control.run();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						return null;
-
-					}
-				};
-			}
-		};
-		obdControl.start();
+private void start(){
+	try {
+		control.run();
+	} catch (InterruptedException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
 	}
-
-	@FXML
-	private void bindToTime() {
-		Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0), new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent actionEvent) {
-				int rpm = data.getRpm();
-				tach.setText(rpm + "");
-			
-				//TODO re-implement annunciator lights when ready.
-//				//check for annunciator lights.
-//				if (rpm > 2000) {
-//					g1.setFill(Color.web("0x3FFF2F"));
-//					g1.setOpacity(1);
-//					g2.setFill(Color.web("0x3FFF2F"));
-//					g2.setOpacity(1);
-//					if (rpm > 3000) {
-//						y1.setFill(Color.web("0xFBFF00"));
-//						y1.setOpacity(1);
-//						y2.setFill(Color.web("0xFBFF00"));
-//						y2.setOpacity(1);
-//						if (rpm > 4000) {
-//							r1.setFill(Color.web("0xFF0000"));
-//							r1.setOpacity(1);
-//							r2.setFill(Color.web("0xFF0000"));
-//							r2.setOpacity(1);
-//						}else{
-//							r1.setFill(Color.web("0x700d0b"));
-//							r1.setOpacity(0.25);
-//							r2.setFill(Color.web("0x700d0b"));
-//							r2.setOpacity(0.25);
-//						}
-//					}else{
-//						y1.setFill(Color.web("0x82860b"));
-//						y1.setOpacity(0.25);
-//						y2.setFill(Color.web("0x82860b"));
-//						y2.setOpacity(0.25);
-//					}
-//				}else{
-//					g1.setFill(Color.web("0x0b7215"));
-//					g1.setOpacity(0.25);
-//					g2.setFill(Color.web("0x0b7215"));
-//					g2.setOpacity(0.25);
-//				}
-				speedo.setText(data.getMph() + "");
-				coolTmp.setText(data.getCoolandTemp() + "");
-				throttlePos.setText(data.getThrottlePos() + "");
-				fuelLvl.setText(data.getFuelLevel() + "");
-				oilTmp.setText(data.getOilTemp() + "");
-				gear.setText(data.getGear());
-			}
-		}), new KeyFrame(Duration.seconds(0.03)));
-		timeline.setCycleCount(Animation.INDEFINITE);
-		timeline.play();
-	}
-	
-	@FXML
-	private void ALHandler(ActionEvent event){
-		
-	}
-
+	//new action listener for the timer
+	ActionListener action = new ActionListener()
+	{   
+		@Override
+		public void actionPerformed(ActionEvent event)
+		{
+			//update labelPanel
+			labelPanel.removeAll();
+			createLabelPanel();
+			labelPanel.revalidate();
+			labelPanel.repaint();
+		}
+	};
+	Timer timer = new Timer(10, action);
+	timer.start();
+}
 }
